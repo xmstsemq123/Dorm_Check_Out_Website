@@ -1,0 +1,7 @@
+{
+    "DB_Name": "Dorm",
+    "MongoDB_user" : "admin",
+	"MongoDB_password" : "123456789",
+	"MongoDB_host" : "localhost",
+	"MongoDB_port" : "27017"
+}

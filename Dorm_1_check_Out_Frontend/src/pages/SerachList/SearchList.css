@@ -1,0 +1,600 @@
+#SearchListMain {
+    user-select: none;
+    display: grid;
+    grid-template-columns: 30% 70%;
+    grid-template-rows: 150px auto;
+    grid-template-areas:
+        "aside nav"
+        "aside section"
+    ;
+}
+
+.SearchListNav {
+    width: 90%;
+    grid-area: nav;
+    display: flex;
+    align-items: center;
+}
+
+#SearchListNavBox {
+    border-radius: 10px;
+    padding: 8px 5px;
+    background-color: rgb(214, 147, 70);
+    color: white;
+    width: 90%;
+    display: flex;
+}
+
+#SerachListNavBoxTitle {
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 24px;
+    margin-left: 10px;
+}
+
+#SearchListFormBox {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.SearchListFilterSelect {
+    width: 30%;
+}
+
+.SearchListFilterSelect>label,
+.SearchListFilterSelect>div {
+    color: white;
+    font-weight: bold;
+}
+
+.SearchListFilterSelect>div>select {
+    color: black;
+}
+
+.SearchListFilterSelect>div>fieldset {
+    border-color: white;
+}
+
+.SearchListAside {
+    margin-top: 50px;
+    grid-area: aside;
+    display: flex;
+    height: auto;
+    justify-content: center;
+}
+
+.SearchListAside>div {
+    width: 60%;
+    background-color: rgb(214, 147, 70);
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 15px 0px;
+    border-radius: 15px;
+}
+
+.SearchListAside>div>button {
+    padding: 10px 0px;
+    border: none;
+    background-color: inherit;
+    border-radius: 15px;
+    width: 80%;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s linear;
+}
+
+.SearchListAside>div>button:hover {
+    border: none;
+    background-color: rgb(255, 204, 145);
+    color: black;
+}
+
+.SearchListSection {
+    display: flex;
+    height: fit-content;
+    grid-area: section;
+    overflow: visible;
+    /* 添加滾動行為 */
+}
+
+#SearchListContentBox {
+    overflow: visible;
+    /* 可滾動 */
+    width: 80%;
+    display: flex;
+    flex-wrap: wrap;
+    /* 允許內容自動換行 */
+    justify-content: space-between;
+    /* 調整內部項目的間距 */
+    border-radius: 15px;
+    padding: 0px 15px;
+}
+
+.SingleAppointmentBox {
+    flex: 1 0 calc(20% - 10px);
+    /* 每個項目占20%寬，並有間距 */
+    margin: 10px;
+    /* 增加間隔以避免擁擠 */
+    background-color: rgb(219, 219, 219);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-weight: bold;
+    padding: 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s linear;
+}
+
+.SingleAppointmentBox:hover {
+    background-color: #adadad;
+}
+
+.SingleAppointmentBox:hover .SAB-FRB {
+    color: white;
+}
+
+.SAB-FRB {
+    width: 100%;
+    text-align: center;
+    font-size: 35px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: 0.2s linear;
+}
+
+.SAB-Status {
+    width: 100%;
+    text-align: center;
+    font-size: 25px;
+    text-shadow: 0px 0px 1px #292929;
+    transition: 0.2s linear;
+}
+
+#AppoinementDetailPopOut {
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 36px;
+}
+
+#AppoinementDetailPopOut>p {
+    position: relative;
+}
+
+.bottomLine::after {
+    content: "";
+    position: absolute;
+    height: 3px;
+    width: 100%;
+    background-color: black;
+    left: 0px;
+    top: 97%;
+}
+
+.btn {
+    margin: 5px;
+    border: none;
+    height: 50px;
+    font-weight: bold;
+    font-size: 22px;
+    cursor: pointer;
+    transition: 0.2s linear;
+    background-color: #d3d3d3;
+}
+
+.btn:hover {
+    background-color: rgb(0, 0, 0);
+    color: white;
+}
+
+/* buttons style */
+.delete {
+    background-color: rgb(189, 13, 13);
+    color: white;
+}
+
+.checking {
+    background-color: rgb(196, 147, 42);
+    color: white;
+}
+
+.qualified {
+    background-color: rgb(106, 184, 106);
+    color: white;
+}
+
+.unqualified {
+    background-color: rgb(214, 136, 136);
+    color: white;
+}
+
+.cancel {
+    background-color: rgb(109, 142, 214);
+    color: white;
+}
+
+.recheck {
+    background-color: rgb(226, 173, 104);
+    color: white;
+}
+
+/* style of text in every single content box */
+.Unchecked {
+    background-color: #533b0f;
+    color: rgb(211, 133, 38);
+}
+
+.Checking {
+    background-color: rgb(9, 10, 70);
+    color: rgb(142, 153, 255);
+}
+
+.Qualified {
+    background-color: #0f5312;
+    color: rgb(33, 187, 46);
+}
+
+.Unqualified {
+    background-color: rgb(70, 9, 9);
+    color: rgb(255, 142, 142);
+}
+
+.MyCheckingBox {
+    animation: rainbow 10s linear infinite;
+}
+
+/* 定義彩虹背景的漸變動畫 */
+@keyframes rainbow {
+    0% {
+        background-color: rgb(255, 126, 126);
+    }
+    10% {
+        background-color: rgb(255, 182, 122);
+    }
+    20% {
+        background-color: rgb(255, 246, 126);
+    }
+    30% {
+        background-color: rgb(172, 255, 124);
+    }
+    40% {
+        background-color: rgb(127, 255, 138);
+    }
+    50% {
+        background-color: rgb(129, 255, 228);
+    }
+    60% {
+        background-color: rgb(129, 184, 255);
+    }
+    70% {
+        background-color: rgb(129, 137, 255);
+    }
+    80% {
+        background-color: rgb(188, 129, 255);
+    }
+    90% {
+        background-color: rgb(255, 129, 249);
+    }
+    100% {
+        background-color: rgb(255, 121, 195);
+    }
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 100%;
+    height: 30px;
+    margin: 15px 0px;
+    background:
+        linear-gradient(#000 0 0) 0/0% no-repeat #ddd;
+    animation: l1 1s infinite linear;
+}
+
+.loader::before {
+    content: "";
+}
+
+@keyframes l1 {
+    100% {
+        background-size: 100%
+    }
+}
+
+/* HTML: <div class="loader"></div> */
+.CSloader {
+    width: 100%;
+    height: 22px;
+    margin-bottom: 10px;
+    border-radius: 40px;
+    color: #000000;
+    border: 3px solid;
+    position: relative;
+}
+
+.CSloader::before {
+    content: "";
+    position: absolute;
+    margin: 2px;
+    width: 25%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: inherit;
+    background: currentColor;
+    animation: l3 1s infinite linear;
+}
+
+@keyframes l3 {
+    50% {
+        left: 100%;
+        transform: translateX(calc(-100% - 4px))
+    }
+}
+
+/* These are for RWD */
+@media (max-width: 1500px) {
+    #SerachListNavBoxTitle {
+        width: 26%;
+    }
+
+    #SearchListFormBox {
+        width: 74%;
+    }
+}
+
+@media (max-width: 1160px) {
+    #SerachListNavBoxTitle {
+        width: 37%;
+        margin-left: 5px;
+    }
+
+    #SearchListFormBox {
+        width: 63%;
+    }
+
+    .SAB-FRB {
+        width: 100%;
+        font-size: 32px;
+    }
+
+    .SAB-Status {
+        width: 100%;
+        font-size: 21px;
+    }
+
+    #AppoinementDetailPopOutBox {
+        min-width: 60%;
+    }
+
+    #AppoinementDetailPopOut {
+        font-size: 22px;
+    }
+
+    .btn {
+        height: 45px;
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 1000px) {
+    #SerachListNavBoxTitle {
+        width: 35%;
+        font-size: 20px;
+    }
+
+    #SearchListFormBox {
+        width: 65%;
+    }
+
+    .SearchListAside>div {
+        width: 70%;
+        height: 250px;
+        padding: 15px 0px;
+    }
+
+    .SearchListAside>div>button {
+        padding: 7px 0px;
+        width: 70%;
+        font-size: 20px;
+    }
+
+    .SAB-FRB {
+        width: 100%;
+        font-size: 25px;
+    }
+
+    .SAB-Status {
+        width: 100%;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 760px) {
+    #SearchListMain {
+        grid-template-columns: 100%;
+        grid-template-rows: auto 180px auto;
+        grid-template-areas:
+            "aside "
+            " nav "
+            " section "
+        ;
+    }
+
+    .SearchListNav {
+        width: 100%;
+        grid-area: nav;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #SearchListNavBox {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    #SerachListNavBoxTitle {
+        position: relative;
+        justify-content: flex-start;
+        margin-bottom: 15px;
+        width: 100%;
+        font-size: 22px;
+    }
+
+    #SerachListNavBoxTitle::after {
+        content: "";
+        width: 98%;
+        height: 3px;
+        background: rgb(58, 58, 58);
+        position: absolute;
+        left: 0px;
+        top: 100%;
+    }
+
+    #SearchListFormBox {
+        width: 100%;
+    }
+
+    .SearchListAside {
+        margin-top: 20px;
+    }
+
+    .SearchListAside>div {
+        width: 90%;
+        height: 40px;
+        flex-direction: row;
+        padding: 15px 15px;
+        outline: 2px solid black;
+    }
+
+    .SearchListAside>div>button {
+        width: 19%;
+        padding: 10px 0px;
+        font-size: 18px;
+    }
+
+    .SearchListSection {
+        justify-content: center;
+    }
+
+    #SearchListContentBox {
+        width: 100%;
+    }
+
+    #AppoinementDetailPopOutBox {
+        min-width: 80%;
+    }
+
+    .btn {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 530px) {
+    #SerachListNavBoxTitle>p {
+        font-size: 18px;
+    }
+
+    .SearchListAside>div {
+        height: 30px;
+    }
+
+    .SearchListAside>div>button {
+        width: 19%;
+        font-size: 14px;
+    }
+
+    .SAB-FRB {
+        width: 100%;
+        font-size: 22px;
+    }
+
+    .SAB-Status {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    #AppoinementDetailPopOutBox {
+        min-width: 85%;
+    }
+
+    #AppoinementDetailPopOut {
+        font-size: 20px;
+    }
+
+    .btn {
+        height: 40px;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 430px) {
+    #SerachListNavBoxTitle>p {
+        font-size: 16px;
+    }
+
+    .SearchListAside>div {
+        height: 24px;
+    }
+
+    .SearchListAside>div>button {
+        font-size: 12px;
+    }
+
+    #AppoinementDetailPopOutBox {
+        min-width: 90%;
+    }
+
+    #AppoinementDetailPopOut {
+        font-size: 18px;
+    }
+
+    .btn {
+        height: 36px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 360px) {
+    .SearchListAside>div {
+        height: 22px;
+    }
+
+    .SearchListAside>div>button {
+        font-size: 10px;
+    }
+
+    .SAB-FRB {
+        width: 100%;
+        font-size: 18px;
+    }
+
+    .SAB-Status {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    .SearchListFilterSelect>label,
+    .SearchListFilterSelect>div {
+        font-size: 12px;
+    }
+
+    #AppoinementDetailPopOut {
+        font-size: 16px;
+    }
+
+    .btn {
+        height: 32px;
+        font-size: 11px;
+    }
+}

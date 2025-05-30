@@ -1,0 +1,260 @@
+#HomeMain {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: '微軟正黑體';
+    font-weight: bolder;
+    user-select: none;
+}
+.HomeBox{
+    margin-top: 50px;
+    /* background-color: rgb(216, 216, 216); */
+    border-radius: 15px;
+    font-weight: bolder;
+    font-family: '微軟正黑體';
+}
+#CurrentAppointment{
+    width: 70%;
+    display: flex;
+    justify-content: space-around;
+}
+#CurrentAppointment > div {
+    width: 40%;
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 28px;
+    line-height: 40px;
+}
+.AmountNumber{
+    font-size: 28px;
+}
+#HomeOthers{
+    width: 70%;
+    display: grid;
+    grid-template-columns: 30% 70%;
+    grid-template-rows: 50% 50%;
+    grid-template-areas: 
+    " Buttons OptionContents "
+    " Buttons OptionContents "
+    ;
+}
+#OptionButtonsBlock{
+    display: flex;
+    justify-content: center;
+    grid-area: Buttons;
+    width: 100%;
+}
+#OptionButtons{
+    height: 150px;
+    background-color: rgb(107, 164, 238);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 70%;
+    align-items: center;
+    padding: 10px;
+}
+#OptionButtons > button{
+    border-radius: 15px;
+    border: none;
+    /* outline: 5px solid rgb(52, 102, 167); */
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0px;
+    background-color: rgb(107, 164, 238);
+    color: white;
+    font-weight: bolder;
+    font-size: 22px;
+    cursor: pointer;
+    transition: 0.2s linear;
+}
+#OptionButtons > button:hover{
+    background-color: rgb(192, 219, 255);
+    color: black;
+    /* outline: 2px solid black; */
+}
+#OptionContent{
+    grid-area: OptionContents;
+    width: 95%;
+    height: auto;
+    background-color: rgb(107, 164, 238);
+    border-radius: 15px;
+    color: white;
+    font-weight: bolder;
+    font-size: 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0px;
+}
+#OptionContentPs{
+    height: 100%;
+    width: 85%;
+} 
+#ArticleTitle{
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+@media (max-width: 1660px){
+    #OptionButtons > button{
+        font-size: 18px;
+    }
+}
+@media (max-width: 1380px){
+    #CurrentAppointment,
+    #HomeOthers{
+        width: 85%;
+    }
+}
+@media (max-width: 1140px){
+    #CurrentAppointment,
+    #HomeOthers{
+        width: 100%;
+    }
+}
+@media (max-width: 970px){
+    #CurrentAppointment > div {
+        font-size: 24px;
+    }
+    #HomeOthers{
+        width: 95%;
+        grid-template-columns: 50% 50%;
+        grid-template-rows: auto auto;
+        grid-template-areas: 
+        " Buttons Buttons "
+        " OptionContents OptionContents "
+        ;
+    }
+    #OptionButtons{
+        height: 50px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        width: 100%;
+        padding: 15px;
+    }
+    #OptionButtons > button{
+        width: 40%;
+        font-size: 22px;
+    }
+    #OptionContent{
+        width: auto;
+        font-size: 22px;
+        padding: 60px 30px;
+        margin: 30px 0px 50px 0px;
+    }
+    #OptionContentPs{
+        width: 90%;
+    } 
+    #ArticleTitle{
+        font-size: 28px;
+    }
+}
+@media (max-width: 630px){
+    #CurrentAppointment > div {
+        font-size: 22px;
+    }
+    #OptionButtons{
+        height: 40px;
+    }
+    #OptionButtons > button{
+        width: 45%;
+        font-size: 18px;
+    }
+    #OptionContent{
+        width: auto;
+        font-size: 18px;
+        padding: 40px 20px;
+        margin: 30px 0px 50px 0px;
+    }
+    #OptionContentPs{
+        width: 95%;
+    } 
+    #ArticleTitle{
+        font-size: 24px;
+    }
+}
+@media (max-width: 460px){
+    #CurrentAppointment {
+        margin-top: 35px;
+    }
+    #CurrentAppointment > div {
+        width: 35%;
+        font-size: 16px;
+    }
+    #HomeOthers{
+        margin-top: 35px;
+    }
+    #OptionButtons{
+        height: 40px;
+    }
+    #OptionButtons > button{
+        font-size: 16px;
+    }
+    #OptionContent{
+        font-size: 16px;
+        padding: 30px 15px;
+    }
+    #ArticleTitle{
+        font-size: 20px;
+    }
+}
+@media (max-width: 420px){
+    #CurrentAppointment > div {
+        width: 32%;
+        font-size: 14px;
+    }
+    #OptionButtons{
+        height: 30px;
+    }
+    #OptionButtons > button{
+        font-size: 14px;
+    }
+    #OptionContent{
+        font-size: 14px;
+        padding: 25px 15px;
+    }
+    #ArticleTitle{
+        font-size: 18px;
+    }
+    .AmountNumber{
+        font-size: 24px;
+    }
+}
+@media (max-width: 375px){
+    #CurrentAppointment > div {
+        width: 32%;
+        font-size: 12px;
+    }
+    #OptionButtons > button{
+        font-size: 12px;
+    }
+    #OptionContent{
+        font-size: 12px;
+        padding: 20px 15px;
+    }
+    #ArticleTitle{
+        font-size: 16px;
+        margin-bottom: 14px;
+    }
+}
+
+#NotInTime{
+    background-color: brown;
+    width: 65%;
+    padding: 20px;
+}
+#NotInTime > div{
+    font-size: 30px;
+    font-weight: 900;
+    color: rgb(255, 210, 210);
+    display: flex;
+    justify-content: center;
+}

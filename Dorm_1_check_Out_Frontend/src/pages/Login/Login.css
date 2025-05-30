@@ -1,0 +1,312 @@
+#LoginMain {
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: '微軟正黑體';
+    font-weight: bolder;
+    user-select: none;
+}
+
+#LoginSection {
+    width: 50%;
+    height: 60%;
+    border-radius: 15px;
+    padding: 45px;
+    background-color: rgb(228, 228, 228);
+    display: flex;
+}
+
+#LoginTitle {
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 30px;
+}
+
+#LoginTitleTextTitle {
+    font-size: 30px;
+}
+
+#LoginTitleTextDetail {
+    font-size: 20px;
+}
+
+#LoginTitle img {
+    width: 70%;
+}
+
+#LoginForm {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-around;
+    flex-basis: 50%;
+}
+
+.InputBlock {
+    position: relative;
+}
+
+.InputBlock>p {
+    font-size: 30px;
+    top: 15px;
+    left: 15px;
+    position: absolute;
+    transition: 0.2s ease-in-out;
+}
+
+.InputBlock input:focus~p,
+.InputBlock input:valid~p {
+    left: 0px;
+    top: -50px
+}
+
+.InputBlock>input {
+    outline: none;
+    /* background-color: rgb(228, 228, 228); */
+    border-radius: 5px;
+    width: 100%;
+    height: 65px;
+    font-size: 25px;
+    border: none;
+}
+
+.BottomLine {
+    width: 0;
+    background-color: black;
+    height: 2px;
+    transition: 0.15s linear;
+}
+
+.InputBlock input:focus~.BottomLine,
+.InputBlock input:valid~.BottomLine {
+    width: 100%;
+}
+
+#LoginForm>button {
+    border: none;
+    width: 100%;
+    height: 75px;
+    background-color: black;
+    color: white;
+    font-weight: bolder;
+    font-size: 25px;
+    cursor: pointer;
+    transition: 0.2s linear;
+}
+
+#LoginForm>button:hover {
+    background-color: white;
+    color: black;
+    outline: 2px solid black;
+}
+
+#LoginFailed {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#LoginFailed>img {
+    width: 60%;
+}
+
+#LoginFailed>p {
+    font-weight: bolder;
+    font-size: 25px;
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+    font-weight: bold;
+    font-family: sans-serif;
+    font-size: 25px;
+    animation: l1 1s linear infinite alternate;
+}
+
+.loader:before {
+    content: "Loading..."
+}
+
+@keyframes l1 {
+    to {
+        opacity: 0
+    }
+}
+
+/* These are for RWD */
+@media (max-width: 1550px) {
+    .InputBlock>input {
+        height: 55px;
+        font-size: 22px;
+    }
+
+    .InputBlock>p {
+        font-size: 22px;
+        top: 15px;
+        left: 15px;
+    }
+
+    .InputBlock input:focus~p,
+    .InputBlock input:valid~p {
+        left: 0px;
+        top: -35px
+    }
+
+    #LoginForm>button {
+        width: 100%;
+        height: 65px;
+        font-size: 22px;
+    }
+
+    #LoginTitleTextTitle {
+        font-size: 26px;
+    }
+
+    #LoginTitleTextDetail {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 1240px) {
+    #LoginSection {
+        width: 60%;
+        height: 50%;
+    }
+
+    #LoginTitle img {
+        width: 90%;
+    }
+
+    #LoginTitleTextTitle {
+        font-size: 22px;
+    }
+
+    #LoginTitleTextDetail {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 800px) {
+    .InputBlock>input {
+        height: 45px;
+        font-size: 18px;
+    }
+
+    .InputBlock>p {
+        font-size: 18px;
+        top: 13px;
+        left: 15px;
+    }
+
+    .InputBlock input:focus~p,
+    .InputBlock input:valid~p {
+        top: -30px
+    }
+
+    #LoginForm>button {
+        height: 45px;
+        font-size: 18px;
+    }
+
+    #LoginSection {
+        width: 80%;
+        height: 40%;
+        padding: 50px 30px;
+    }
+
+    #LoginTitle img {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .InputBlock>input {
+        width: 90%;
+    }
+
+    #LoginForm>button {
+        width: 93%;
+    }
+
+    #LoginSection {
+        width: 90%;
+        height: 35%;
+        padding: 55px 15px;
+    }
+
+    #LoginTitleTextTitle {
+        font-size: 18px;
+    }
+
+    #LoginTitleTextDetail {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 460px) {
+    #LoginSection {
+        height: auto;
+        flex-direction: column;
+        padding: 45px 10px;
+    }
+
+    #LoginTitleTextTitle {
+        font-size: 30px;
+    }
+
+    #LoginTitleTextDetail {
+        font-size: 12px;
+    }
+
+    #LoginTitle>img {
+        display: none;
+    }
+
+    #LoginForm {
+        height: 50%;
+        justify-content: center;
+        align-items: center;
+        margin-top: 30px;
+    }
+
+    .InputBlock{
+        width: 85%;
+    }
+
+    .InputBlock>input {
+        margin: 20px 0px;
+        width: 100%;
+        height: 45px;
+        font-size: 18px;
+    }
+
+    .InputBlock>p {
+        font-size: 18px;
+        top: 33px;
+        left: 15px;
+    }
+
+    .InputBlock input:focus~p,
+    .InputBlock input:valid~p {
+        left: 0px;
+        top: -10px
+    }
+
+    .BottomLine {
+        position: absolute;
+        bottom: 20px;
+    }
+
+    #LoginForm>button {
+        margin-top: 20px;
+        width: 86%;
+        height: 45px;
+        font-size: 18px;
+    }
+}

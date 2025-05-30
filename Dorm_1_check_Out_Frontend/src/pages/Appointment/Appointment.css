@@ -1,0 +1,235 @@
+#AppointmentMain{
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+}
+/* 旁邊選擇列 */
+#AppointmentAside{
+    margin-top: 50px;
+    flex-basis: 15%;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+}
+#AsideButtons{
+    width: 80%;
+    height: 150px;
+    background-color: rgb(238, 177, 107);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+#AsideButtons > button{
+    border-radius: 15px;
+    border: none;
+    /* outline: 5px solid rgb(52, 102, 167); */
+    width: 90%;
+    padding: 10px 0px;
+    margin: 10px 0px;
+    background-color: rgb(238, 177, 107);
+    color: white;
+    font-weight: bolder;
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.2s linear;
+}
+#AsideButtons > button:hover{
+    background-color: rgb(192, 219, 255);
+    color: black;
+    /* outline: 2px solid black; */
+}
+
+/* These are for CheckOutAppointment.jsx */
+#AppointmentSection{
+    width: 45%;
+    display: flex;
+    justify-content: center;
+}
+#AppointmentForm{
+    width: 100%;
+    background-color: rgb(219, 219, 219);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 25px;
+}
+#AppointmentBox{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#AppointmentBox > div{
+    width: 95%;
+    margin: 5px 0px;
+    display: flex;
+    justify-content: center;
+}
+ .MuiInputBase-root > fieldset{
+    border: 2px solid black;
+ }
+ .MuiTextField-root > div > input {
+    font-size: 20px;
+    font-weight: bolder;
+    font-family: '微軟正黑體';
+ }
+.colInput > div > select {
+    font-size: 20px;
+    font-weight: bolder;
+    font-family: '微軟正黑體';
+}
+.colInput > label {
+    font-size: 20px;
+    font-weight: bold;
+    font-family: '微軟正黑體';
+}
+.col1Input {
+    width: 30%;
+}
+.col2Input {
+    width: 94%;
+}
+.col3Input {
+    width: 46%;
+}
+#AppintmentSendButton > button{
+    margin-top: 85px;
+    border: none;
+    outline: 2px solid black;
+    min-width: 95%;
+    min-height: 55px;
+    background-color: rgb(219, 219, 219);
+    color: black;
+    font-weight: bolder;
+    font-size: 25px;
+    cursor: pointer;
+    transition: 0.2s linear;
+}
+#AppintmentSendButton > button:hover{
+    background-color: rgb(66, 66, 66);
+    color: white;
+    outline: none;
+}
+#CheckAddAppointment{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+#CheckAddAppointment > p{
+    width: 100%;
+    font-weight: bold;
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 100px;
+}
+#CheckAddAppointment > div{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+#CheckAddAppointment > div > button{
+    border: none;
+    outline: 2px solid black;
+    width: 30%;
+    min-height: 55px;
+    background-color: rgb(219, 219, 219);
+    color: black;
+    font-weight: bolder;
+    font-size: 25px;
+    cursor: pointer;
+    transition: 0.2s linear;
+}
+#CheckAddAppointment > div > button:hover{
+    background-color: rgb(66, 66, 66);
+    color: white;
+    outline: none;
+}
+#SendAlarm{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#SendAlarm > img{
+    width: 60%;
+}
+#SendAlarm > p{
+    font-weight: bolder;
+    font-size: 25px;
+}
+/* These are for ChangeAppointment.jsx */
+
+/* These are for RWD */
+@media (max-width: 1500px){
+    #PopOut{
+        width: 45%;
+    }
+    #AppointmentSection{
+        width: 55%;
+    }
+}
+@media (max-width: 1100px){
+    #PopOut{
+        width: 55%;
+    }
+    #AppointmentSection{
+        width: 65%;
+    }
+}
+@media (max-width:900px){
+    #CheckAddAppointment > p{
+        font-size: 27px;
+        margin-bottom: 150px;
+    }
+    #CheckAddAppointment > div > button{
+        width: 40%;
+        min-height: 55px;
+        font-size: 25px;
+    }
+    #AppointmentSection{
+        width: 75%;
+    }
+}
+@media (max-width:650px){
+    #CheckAddAppointment > p{
+        font-size: 22px;
+        margin-bottom: 20%;
+    }
+    #CheckAddAppointment > div > button{
+        width: 40%;
+        min-height: 40px;
+        font-size: 20px;
+    }
+    #PopOut{
+        width: 75%;
+        height: 35%;
+    }
+    #AppointmentSection{
+        width: 85%;
+    }
+}
+@media (max-width:500px){
+    #AppointmentSection{
+        width: 95%;
+    }
+    .MuiTextField-root > div > input,
+    .colInput > div > select,
+    .colInput > label 
+     {
+        font-size: 16px;
+     }
+     #AppintmentSendButton > button{
+        margin-top: 55px;
+        min-width: 95%;
+        min-height: 45px;
+        font-size: 20px;
+    }
+}

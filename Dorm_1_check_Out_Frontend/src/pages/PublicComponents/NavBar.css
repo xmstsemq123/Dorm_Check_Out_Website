@@ -1,0 +1,126 @@
+/* 全域設定 */
+* {
+    margin: 0
+}
+/* 整條導覽列設定 */
+#TopNav {
+    user-select: none;
+    background-color: black;
+    color: white;
+    display: grid;
+    min-height: 140px;
+    grid-template-columns: 80% 20%;
+    grid-template-rows: 50% 50%;
+    grid-template-areas: 
+        " Title User "
+        " Link Link "
+    ;
+}
+/* 導覽列圖片&&標題 */
+#TopNavTitle {
+    display: flex;
+    grid-area: Title;
+}
+/* 導覽列圖片 */
+#TopNavTitle > img{
+    height: 70px;
+}
+/* 導覽列標題 */
+#TopNavTitle > p {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-family: '標楷體';
+    font-weight: bolder;
+    font-size: 26px;
+    padding: 0px 20px;
+}
+/* 檔覽列連結部分 */
+#TopNavLinkBlock{
+    grid-area: Link;
+    display: flex;
+    justify-content: space-around;
+}
+.TopNavLink{
+    width: 100%;
+    border-top: 1px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    font-family: '微軟正黑體';
+    font-weight: bolder;
+    font-size: 25px;
+    transition: 0.2s linear;
+}
+.TopNavLink:hover{
+    background-color: rgb(223, 224, 224);
+    color: black;
+}
+#TopNavUserProfile{
+    grid-area: User;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    font-family: '微軟正黑體';
+    font-weight: bolder;
+    font-size: 20px;
+}
+@media (max-width: 1080px) {
+    #TopNavUserProfile{
+        font-size: 16px;
+    }
+}
+@media (max-width: 845px) {
+    #TopNav {
+        min-height: 120px;
+    }
+    #TopNavTitle > img{
+        height: 60px;
+    }
+    #TopNavTitle > p {
+        font-size: 20px;
+    }
+    #TopNavUserProfile{
+        font-size: 14px;
+    }
+}
+@media (max-width: 562px) {
+    #TopNavTitle > p {
+        font-size: 18px;
+    }
+    .TopNavLink{
+        font-size: 18px;
+    }
+}
+@media (max-width: 420px) {
+    #TopNav {
+        min-height: 100px;
+    }
+    #TopNavTitle > img{
+        height: 50px;
+    }
+    #TopNavTitle > p {
+        font-size: 14px;
+    }
+    #TopNavUserProfile{
+        font-size: 13px;
+    }
+}
+@media (max-width: 359px) {
+    #TopNav {
+        grid-template-columns: 20% 80%;
+    }
+    #TopNavUserProfile{
+        font-size: 20px;
+    }
+    #TopNavTitle > p {
+        display: none;
+    }
+    .TopNavLink{
+        font-size: 14px;
+    }
+}
