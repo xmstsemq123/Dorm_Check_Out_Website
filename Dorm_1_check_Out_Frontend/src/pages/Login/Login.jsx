@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import LoginFailedIcon from '../../assets/LoginFailed.png'
+import { getSHA256Hash } from "boring-webcrypto-sha256";
 //處理與後端API交互
 async function FetchLoginDataAPI(handleOpen, setUserLoginStatus){
     //讀取輸入的帳密
@@ -16,6 +17,8 @@ async function FetchLoginDataAPI(handleOpen, setUserLoginStatus){
         handleOpen()
         return null
     }
+    const hashedUser = await getSHA256Hash(UserValue)
+    const hashedPassword = await getSHA256Hash(PasswordValue)
     //要傳送到後端的資料(http格式)
     const Send_Data = {
         method: "POST",
@@ -23,8 +26,8 @@ async function FetchLoginDataAPI(handleOpen, setUserLoginStatus){
             'Content-type': 'application/json'
         },
         body: JSON.stringify({
-            "UserValue": UserValue,
-            "PasswordValue": PasswordValue
+            "UserValue": hashedUser,
+            "PasswordValue": hashedPassword
         })
     }
     await fetch(BACKEND_API_USER_DATA_INTERFACE, Send_Data)
@@ -37,7 +40,8 @@ async function FetchLoginDataAPI(handleOpen, setUserLoginStatus){
             localStorage.setItem('Refresh_Token', data["Refresh_Token"]) //JWT-Refresh-Token
             localStorage.setItem('Name', data["Name"]) //使用者真實姓名
             localStorage.setItem('Identity', data["Identity"]) //使用者真實姓名
-            setUserLoginStatus({ "Status": "Ok", "Name": data["Name"] }) //紀錄用戶登入狀態
+            localStorage.setItem('Id', data["Id"]) //使用者id
+            setUserLoginStatus({ "Status": "Ok", "Name": data["Name"], "Identity": data["Identity"], 'Id': data["Id"] }) //紀錄用戶登入狀態
         }else{ //如果帳密不正確
             handleOpen() //彈出視窗
         }

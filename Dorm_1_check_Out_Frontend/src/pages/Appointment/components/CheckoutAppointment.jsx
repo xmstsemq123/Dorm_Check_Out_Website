@@ -27,11 +27,12 @@ const FloorValueHandler = (Floor, setFloorValue, setRoomValue) => {
 let BedsOptions = [{ value: "", label: "床號" }]; //房號選項
 //依照選取房號，釋出對應床號，並記錄選取房號
 const RoomValueHandler = (Room, setRoomValue, setBedValue, Floor) => {
-    if (Room == "15" || Floor == "14") { //因15房只有4個床位，所以特殊篩選
-        BedsOptions = beds.filter((bedData) => Number(bedData["value"]) <= 4)
-    } else { //其他房皆有6個床位
-        BedsOptions = beds
-    }
+    BedsOptions = beds
+    // if (Room == "15" || Floor == "14") { //因15房只有4個床位，所以特殊篩選
+    //     BedsOptions = beds.filter((bedData) => Number(bedData["value"]) <= 4)
+    // } else { //其他房皆有6個床位
+    //     BedsOptions = beds
+    // }
     setRoomValue(Room) //紀錄選取房號
     setBedValue("1") //初始化選取床號
 }
@@ -40,8 +41,10 @@ let ContactOptionLable = "Line ID" //聯絡方式選項
 const ContactOptionHandler = (contact, setContactOptionValue) => {
     if (contact == "Line") {
         ContactOptionLable = "Line ID"
-    } else {
+    } else if (contact == "Phone"){
         ContactOptionLable = "電話號碼"
+    } else {
+        ContactOptionLable = "Email"
     }
     setContactOptionValue(contact) //紀錄選取的聯絡方式
 }

@@ -1,6 +1,5 @@
 const HOME_PAGE = "" //網站主頁面，供送出預約後跳轉用
 const BACKEND_API_HOST = ""
-// const BACKEND_API_HOST = "http://127.0.0.1:5000"
 const BACKEND_API_USER_DATA_INTERFACE = `${BACKEND_API_HOST}/api/UserDataInterface`
 const BACKEND_API_ADD_APPOINTMENT_INTERFACE = `${BACKEND_API_HOST}/api/AddAppointmentDataInterface`
 const BACKEND_API_SEARCH_APPOINTMENT_INTERFACE = `${BACKEND_API_HOST}/api/Appointments`

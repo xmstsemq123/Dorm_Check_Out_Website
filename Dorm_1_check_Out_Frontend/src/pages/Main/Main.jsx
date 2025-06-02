@@ -11,7 +11,7 @@ import Appointment from '../Appointment/Appointment'
 import SearchList from '../SerachList/SearchList'
 import WebLogo from '../../assets/WebLogo.png'
 const Main = () =>{
-  const [UserLoginStatus, setUserLoginStatus] = useState({ "Status": "No", "Name": "", "Identity": "" })
+  const [UserLoginStatus, setUserLoginStatus] = useState({ "Status": "No", "Name": "", "Identity": "", "Id": "" })
   const [NavbarStatus, setNavbarStatus] = useState("/")
     return (<>
     <CheckUser setUserLoginStatus={setUserLoginStatus} NavbarStatus={NavbarStatus} UserLoginStatus={UserLoginStatus} />

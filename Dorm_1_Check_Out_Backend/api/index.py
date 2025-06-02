@@ -8,7 +8,11 @@ from bson import ObjectId
 import json
 import datetime
 import httpx
+import random
 import re
+from email_validator import validate_email, EmailNotValidError
+import bcrypt
+import hashlib
 app = Flask(__name__, static_url_path='/static')
 CORS(
  app,
@@ -37,59 +41,17 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(hours = 3)  # Access
 app.config['JWT_REFRESH_TOKEN_EXPIRES'] = datetime.timedelta(days = 14)  # Refresh Token 過期時間
 jwt = JWTManager()
 jwt.init_app(app)
-uri = ""
 
-Mongo_client = MongoClient(uri, server_api=server_api.ServerApi('1'))
-DB_Client = Mongo_client[""]
-def collection_exists() -> bool:
-    try:
-        collections = DB_Client.list_collection_names()
-        return True
-    except PyMongoError as e:
-        return False
-
+MongoDBUri = ""
 MALE_WEBHOOK_URL = ""
 FEMALE_WEBHOOK_URL = ""
-def send_discord_notification_for_male(Floor, Room, Bed, Name, ContactOption, ContactValue):
-    with httpx.Client() as client:
-        client.post(MALE_WEBHOOK_URL, json={
-            "content": f"""
-🌸樓長主人大人～💗
-有一位住宿生送出退宿檢查申請囉✨
 
-📍住宿位置：{Floor}{Room}-{Bed}
-🧸小名：{Name}
-📱可以用 {ContactOption} 聯絡唷！
-🔍{ContactOption} 是：{ContactValue}
+Mongo_client = MongoClient(MongoDBUri, server_api=server_api.ServerApi('1'))
+DB_Client = Mongo_client["Dorm"]
 
-請主人們稍微留意一下吧～🍰
-辛苦您們了～祝您今天也萌萌的💖(｡•ㅅ•｡)ゝ
-            """
-        })
-        
-def send_discord_notification_for_female(Floor, Room, Bed, Name, ContactOption, ContactValue):
-    with httpx.Client() as client:
-        client.post(FEMALE_WEBHOOK_URL, json={
-            "content": f"""
-🌟 嗨～親愛的樓長姐姐💖
-剛剛收到一份新的退宿預約申請，想第一時間告訴妳 😊
-
-🏠 住宿位置：{Floor}{Room}-{Bed}
-🐥 他的暱稱：{Name}
-📲 他願意用 {ContactOption} 聯絡妳喔～
-🔍 {ContactOption} 是：{ContactValue} ✨
-
-辛苦的妳總是這麼負責又貼心～
-如果有什麼需要幫忙的地方，記得也跟我說唷 💬
-我會一直在這裡陪著妳 🌌
-            """
-        })
-        
-#檢查預約時間是否有在營業日內
-# 定義可預約的工作時間（key為日期字串，value為 (start_time, end_time)）
 working_hours = {
     "alltime": False,
-    "2025-05-31": (datetime.time(0, 0), datetime.time(23, 0)),
+    "2025-06-02": (datetime.time(0, 0), datetime.time(23, 59)),
     "2025-06-07": (datetime.time(9, 0), datetime.time(17, 0)),
     "2025-06-08": (datetime.time(9, 0), datetime.time(17, 0)),
     "2025-06-09": (datetime.time(9, 0), datetime.time(17, 0)),
@@ -101,6 +63,66 @@ working_hours = {
     "2025-06-15": (datetime.time(9, 0), datetime.time(17, 0)),
     "2025-06-16": (datetime.time(9, 0), datetime.time(17, 0)),
 }
+
+def get_cha_eun_woo_message(index, floor, room, bed):
+    location = f"{floor}{room}-{bed}"
+    messages = [
+        f"嗨～我剛剛查到 {location} 的同學送出退宿申請了～我想第一時間告訴妳 💬",
+        f"{location} 有人申請退宿了。不是什麼大事…但我只想讓妳知道。🙂",
+        f"我偷偷靠近，是為了跟妳說一句話…{location} 的同學要退宿了唷 🫣",
+        f"姐姐～剛剛有份新的退宿申請喔：{location} 🌸 一定要記得處理，但別太累。",
+        f"今日小提醒 ✨ {location} 的同學準備退宿了，我會幫妳記住這些細節。",
+        f"{location} 的退宿申請剛送出，我知道妳總是最細心～就像妳讓我放心一樣 💙",
+        f"樓長姊姊 🍃 來個溫柔提醒：{location} 有同學退宿唷～記得查看一下 💌",
+        f"嘿～今天也很辛苦對吧？{location} 剛剛送出退宿申請，我會陪妳一起處理 👀",
+        f"我最在意的人，就是妳，所以這件事我一定要先讓妳知道：{location} 的退宿申請已送出 💫",
+        f"🌙夜晚悄悄地，我也悄悄來說一聲：{location} 的退宿消息到了，妳放心，我會一直在 🖤"
+    ]
+    if 0 <= index < len(messages):
+        return messages[index]
+    else:
+        return messages[index%10]
+    
+def get_maid_message(index, floor, room, bed):
+    location = f"{floor}{room}-{bed}"
+    messages = [
+        f"主人～💌 小女僕來報告✨ {location} 的住宿生送出退宿申請囉～請主人稍微留意一下唷 (*´∀`)~♥",
+        f"叩叩叩～👒 {location} 的同學要退宿了呢～主人辛苦了，讓小女僕幫您提醒一下📎",
+        f"主～人～殿～下～💗 這裡是 {location} 的退宿通知唷，請主人查收～",
+        f"咕嚕咕嚕～☕ 小女僕剛巡邏完回來，發現 {location} 有退宿申請呢～報告給主人大人！",
+        f"主人主人～(*≧∀≦*) 這邊是 {location} 的新通知唷～有人申請退宿啦，小女僕立刻來回報✨",
+        f"嗚呀～又有新的消息啦！📣 {location} 的孩子想退宿了呢，小女僕幫您記住了💮",
+        f"✨叮咚～主人請注意✨ {location} 有退宿申請送出囉～感謝主人一直努力照顧大家💖",
+        f"喵嗚～🐾 有消息來了喵！{location} 的同學想退宿喵～讓小女僕代為通報 >w<",
+        f"呣嗯…小女僕剛剛拿到的退宿名單裡有 {location} 呢～主人放心，事情我幫您記著了🍰",
+        f"呼呼～主人今天也辛苦了🍃這邊是小小通知：{location} 有住宿生要退宿囉，祝主人晚上好夢唷💤"
+    ]
+    if 0 <= index < len(messages):
+        return messages[index]
+    else:
+        return messages[index%10]
+
+def send_discord_notification(Floor, Room, Bed):
+    random.seed(int(Floor)+int(Room)-int(Bed))
+    random_index = random.randint(0,9)
+    if int(Floor) < 10:
+        with httpx.Client() as client:
+            client.post(MALE_WEBHOOK_URL, json={
+                "content": get_maid_message(random_index, Floor, Room, Bed)
+            })
+    else:
+        with httpx.Client() as client:
+            client.post(FEMALE_WEBHOOK_URL, json={
+                "content": get_cha_eun_woo_message(random_index, Floor, Room, Bed)
+            })
+
+def collection_exists() -> bool:
+    try:
+        DB_Client.list_collection_names()
+        return True
+    except PyMongoError as e:
+        return False
+        
 def is_within_custom_working_hours(dt: datetime) -> bool:
     date_str = dt.strftime("%Y-%m-%d")
     if datetime.time(12, 0) <= dt.time() <= datetime.time(13, 0):
@@ -121,6 +143,41 @@ def CheckInput(inputList):
         #確保沒有特殊符號
         if (bool(re.search(r"[\${}\[\]\"']", inputString))):
             return True
+    return False
+
+def CheckLineId(inputstr):
+    # 只允許英文字母、數字、.、-、_
+    pattern = r'[^a-zA-Z0-9._-]'
+    return re.search(pattern, inputstr) is None
+
+def CheckPhone(inputstr):
+    pattern = r'^09\d{8}$'
+    return re.match(pattern, inputstr) is not None
+
+def CheckEmail(inputstr):
+    try:
+        validate_email(inputstr)
+        return True
+    except EmailNotValidError:
+        return False
+    
+# Check if inputs of Floor, Bed, Room is valid
+def CheckFloorBedRoom(inputstrDict: dict):
+    for type, inputstr in inputstrDict.items():
+        if not inputstr.isdigit(): 
+            return False
+        if type == "Floor":
+            if not 1 <= int(inputstr) <= 13:
+                return False
+        elif type == "Room":
+            if not 1 <= int(inputstr) <= 33:
+                return False
+        elif type == "Bed":
+            if not 1 <= int(inputstr) <= 6:
+                return False
+        else:
+            return False
+    return True
 
 @app.route("/")
 def home():
@@ -167,10 +224,6 @@ def HomeBulletin():
             "WatingAmount": WatingAmount
         })
     except Exception as e:
-        # return jsonify({
-        #     "TodayAmount": 6969,
-        #     "WatingAmount": 6969,
-        #     "err": f"{e}" })
         return f"{e}"
 
 #新增預約
@@ -181,17 +234,38 @@ def AddAppointmentDataInterface():
         return jsonify({'success': 'Failed', 'Cause': '目前時間不在工作時段內⛔，請直接找宿管協助退宿！'})
     # 讀取傳來的資料
     data = json.loads(request.get_data())
+    # Get Floor, Room, Bed and Check them
     Floor = data["FloorValue"]
     Room = data["RoomValue"]
     Bed = data["BedValue"]
+    is_valid = CheckFloorBedRoom({"Floor" : Floor, "Room": Room, "Bed": Bed})
+    if not is_valid:
+        return jsonify({'success': 'Failed', 'Cause': '請輸入合法資料！'})
+    # Get Name and Check it
     Name = data["NameValue"]
+    if len(Name) > 30:
+        return jsonify({'success': 'Failed', 'Cause': '姓名長度不可超過30字！'})
+    # Get Option of Contact way and check it
     ContactOption = data["ContactOptionValue"]
+    if ContactOption not in ["Line", "Phone", "Email"]:
+        return jsonify({'success': 'Failed', 'Cause': '請輸入合法資料！'})
+    # Get ContactValue and check it
     ContactValue = data["ContactValue"]
-    # 過濾資料
     if CheckInput([Name, ContactValue]):
         return jsonify({ "Status": "Failed", "Cause": "不可輸入特殊符號！" })
+    if ContactOption == "Line":
+        is_Valid = CheckLineId(ContactValue)
+        if not is_Valid:
+            return jsonify({ "Status": "Failed", "Cause": "請輸入正確格式的Line Id！" })
+    elif ContactOption == "Phone":
+        is_Valid = CheckPhone(ContactValue)
+        if not is_Valid:
+            return jsonify({ "Status": "Failed", "Cause": "請輸入正確格式的電話號碼(09xxxxxxxx)！" })
+    elif ContactOption == "Email":
+        is_Valid = CheckEmail(ContactValue)
+        if not is_Valid:
+            return jsonify({ "Status": "Failed", "Cause": "請輸入正確格式的Email！" })
     #獲取當前時間
-    now = datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(hours=8)))
     dateymd = now.date().isoformat() # 2021-10-19 #用於分類
     datedetail = now.strftime('%Y/%m/%d %H:%M:%S') # 2021/10/19 14:48:38 #用於排序預約順序
     #連線資料庫
@@ -217,10 +291,7 @@ def AddAppointmentDataInterface():
         "AppointmentYMD": dateymd,
         "CheckedTimestamp": ""
     })
-    if int(Floor) < 10:
-        send_discord_notification_for_male(Floor, Room, Bed, Name, ContactOption, ContactValue)
-    else:
-        send_discord_notification_for_female(Floor, Room, Bed, Name, ContactOption, ContactValue)
+    send_discord_notification(Floor, Room, Bed)
     return jsonify({ "Status": "Success" })
 
 #讀取所有預約
@@ -237,14 +308,42 @@ def Appointments():
 
 #更改預約的狀態
 @app.route("/api/ChangeAppointmentStatus", methods=["POST"])
+@jwt_required()
 def ChangeAppointmentStatus():
+    # User Verification
+    data = json.loads(request.get_data())
+    Id = data["Id"]
+    staffName = data["StaffName"]
+    if "" in [Id, staffName]:
+        return jsonify({ "Status": "Failed", "Cause": "S1，你不是管理員！" })
+    # first, check if id is correct
+    collection = DB_Client["Users"]
+    user = collection.find_one({"_id": ObjectId(Id)})
+    if not user:
+        return jsonify({ "Status": "Failed", "Cause": "S2，你不是管理員！" })
+    # second, check if name is matched
+    if user.get("Name") != staffName:
+        return jsonify({ "Status": "Failed", "Cause": "S3，你不是管理員！" })
+    
     now = datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(hours=8)))
     datedetail = now.strftime('%Y/%m/%d %H:%M:%S') # 2021/10/19 14:48:38 #用於排序預約順序
-    data = json.loads(request.get_data())
     effect = data["Effect"]
     oid = data["oid"]
-    staffName = data["StaffName"]
     AppointmentDB = DB_Client["Appointment"]
+    AppointInfo = AppointmentDB.find_one({
+        "_id": ObjectId(oid)
+    })
+    # Check if that appointment stored in database
+    if not AppointInfo:
+        return jsonify({ "Status": "Failed", "Cause": "該預約已被其他幹部刪除！" })
+    # Check if that staff has Permission
+    if effect in ["Cancel", "Qualified", "Unqualified"] and staffName != AppointInfo.get("Staff"):
+        return jsonify({ "Status": "Failed", "Cause": "你沒有權限！可能此預約已由其他幹部檢查，請刷新網頁！" })
+    elif effect == "Checking" and AppointInfo["Staff"] != "":
+        return jsonify({ "Status": "Failed", "Cause": "此預約已由其他幹部檢查，請刷新網頁狀態！" })
+    
+    OriginalStatus = AppointInfo["Status"]
+    
     if effect == "Delete":
         AppointmentDB.delete_one({ "_id": ObjectId(oid) })
     elif effect == "Cancel":
@@ -264,12 +363,14 @@ def ChangeAppointmentStatus():
                                  {"$set": { "Status": "Unqualified", "Staff": staffName, "CheckedTimestamp": datedetail }}, 
                                  upsert=False)
     else:
-        return jsonify({ "Status": "Failed" })
+        return jsonify({ "Status": "Failed", "Cause": "S4，網站出現錯誤！" })
     ChangeLogDB = DB_Client["ChangeLog"]
     ChangeLogDB.insert_one({
-        "Effect": effect,
+        "Description": f"{staffName} {effect} the {OriginalStatus}",
+        "StaffOID": Id,
         "ChangedOID": oid,
-        "StaffName": staffName,
+        "AppointFRB": f"{AppointInfo["FloorValue"]}{AppointInfo["RoomValue"]}-{AppointInfo["BedValue"]}",
+        "AppointContact": f"{AppointInfo["ContactOptionValue"]}: {AppointInfo["ContactValue"]}",
         "timestamp": datedetail
     })
     return jsonify({ "Status": "Success" })
@@ -277,6 +378,7 @@ def ChangeAppointmentStatus():
 #管理員後台登入
 @app.route("/api/UserDataInterface", methods=["POST"])
 def UserDataInterface():
+    # Username: sha256, Password: sha256 + bcrypto
     #讀取傳來的資料
     data = json.loads(request.get_data())
     Username = data['UserValue']
@@ -284,26 +386,31 @@ def UserDataInterface():
     #檢查輸入，避免sql注入
     if CheckInput([Username, Password]):
         return jsonify({ "Status": "Failed" })
-    #連接資料庫，查看該帳密是否有存在於資料庫中
+    #連接資料庫，查看該帳號是否有存在於資料庫中
     collection = DB_Client["Users"]
-    count = collection.count_documents({
-        "UserName": Username,
-        "Password": Password
+    result = collection.count_documents({
+        "$and":[ { "UserName": Username } ]
     })
-    ResultJson = ""
-    if count > 0: #若帳密正確
-        cursor = collection.find({
-            "$and":[ { "UserName": Username }, { "Password": Password } ]
-        })
-        Name = cursor[0]["Name"]
-        Identity = cursor[0]["Identity"]
-        user_id = json.loads(dumps(list(cursor)))[0]["_id"]["$oid"]
-        access_token = create_access_token(identity=user_id)
-        refresh_token = create_refresh_token(identity=user_id)
-        ResultJson = { "Status": "Success", "Access_Token": access_token, "Refresh_Token": refresh_token, "Name": Name, "Identity":Identity }
-    else: #若帳密不正確
-        ResultJson = { "Status": "Failed", "Access_Token": "none" }
-    return jsonify(ResultJson)
+    if not result > 0:
+        return jsonify({ "Status": "Failed", "Access_Token": "none" })
+    
+    cursor = collection.find_one({
+        "$and":[ { "UserName": Username } ]
+    })
+    # Check Password
+    if not bcrypt.checkpw(Password.encode(), cursor["Password"].encode()):
+        return jsonify({ "Status": "Failed", "Access_Token": "none" })
+    Name = cursor["Name"]
+    Identity = cursor["Identity"]
+    user_id = json.loads(dumps(cursor))["_id"]["$oid"]
+    access_token = create_access_token(identity=user_id)
+    refresh_token = create_refresh_token(identity=user_id)
+    return jsonify({ "Status": "Success", 
+                    "Access_Token": access_token, 
+                    "Refresh_Token": refresh_token, 
+                    "Name": Name, 
+                    "Identity":Identity, 
+                    "Id":user_id })
 
 '''
     以下是JWT驗證部分
@@ -312,8 +419,7 @@ def UserDataInterface():
 @app.route('/protected', methods=['POST'])
 @jwt_required()
 def protected(): 
-    current_user = get_jwt_identity()
-    return jsonify(msg = 'Ok', user = current_user)
+    return jsonify(msg = 'Ok')
 
 #使用Refresh Token刷新Access Token
 @app.route('/refresh', methods=["POST"])
@@ -366,5 +472,5 @@ def unauthorized_callback(error):
 if __name__ == '__main__':
     # Initial_Properties()
     # MongoDB_Connection()
-    # app.run()
-    app.run(debug=True)
+    app.run()
+    # app.run(debug=True)

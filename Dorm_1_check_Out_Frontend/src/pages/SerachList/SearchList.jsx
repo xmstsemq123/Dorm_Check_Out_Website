@@ -40,23 +40,31 @@ async function ButtonsTofetch(Effect, oid, StaffName, setOpen, setStatusofChange
             return null
         }
     }
+    let Id = localStorage.getItem('Id') //從session讀取管理者Id
+    let Access_Token = localStorage.getItem('Access_Token') //從session讀取管理者Id
     const SendData = {
         method: "POST",
         headers: {
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'Authorization': `Bearer ${Access_Token}`
         },
         body: JSON.stringify({
             "Effect": Effect,
             "oid": oid,
-            "StaffName": StaffName
+            "StaffName": StaffName,
+            "Id": Id
         })
     }
     await fetch(BACKEND_API_CHANGE_APPOINTMENT_STATUS_INTERFACE, SendData)
         .then(res => res.json())
         .then(data => {
+            if(data["Status"] == "Failed"){
+                alert(data["Cause"])
+            }
             setStatusofChangeDataStatus(false)
         })
-        .catch(() => {
+        .catch((err) => {
+            alert("伺服器出現錯誤，請聯絡網站管理員！")
             setChangeDataStatusFailed(true)
         })
 }
